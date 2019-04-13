@@ -1,0 +1,10 @@
+rootProject.name = 'bigdata'
+include 'hdfs'
+include 'MapReduce'
+include 'hive'
+include 'hbase'
+include 'spark'
+include 'flink'
+include 'zookeeper'
+include 'kafka'
+

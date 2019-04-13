@@ -1,0 +1,27 @@
+从名字上就可以分辨出这三种split策略的适用场景：
+
+ConstantSizeRegionSplitPolicy：
+按固定长度分割region，固定长度取值优先获取table的”MAX_FILESIZE” 值，若没有设定该属性，则采用在hbase-site.xml中配置的hbase.hregion.max.filesize值，
+在0.94版本中这个值的缺省值已经被调整为：10 * 1024 * 1024 * 1024L 也就是10G。
+这个策略是0.94版本之前默认使用的，采用该策略后，当table的某一region中的某一store大小超过了预定的最大固定长度时，对该region进行split。
+splitPoint算法的选择还是依据“数据对半”原则，找到该region的最大store的中间长度的rowkey进行split。
+
+
+
+IncreasingToUpperBoundRegionSplitPolicy：
+按照region数量累增划分region，该策略为Hbase 0.94默认使用的策略，采用该策略分割的region大小是不相等的，每次新region的大小随着region数量的增多而增大。
+具体增长方法为：Min (R^2 *  ”MEMSTORE_FLUSHSIZE”||”hbase.hregion.memstore.flush.size”, “hbase.hregion.max.filesize”)；
+其中R 为当前这个region所在regionserver中对应此table的region数，MEMSTORE_FLUSHSIZE 为table创建时指定大小，
+若table指定了此属性则忽略下面的hbase.hregion.memstore.flush.size 。
+hbase.hregion.memstore.flush.size 为hbase-site中设定大小 默认128M
+hbase.hregion.max.filesize 为hbase-site中设定的单个region大小，默认10G
+每次region大小是取上述两个size中较小的那个。
+假设使用hbase.hregion.memstore.flush.size 128M, hregion.max.filesize为10G， 那么每次region增长情况为：512M,1152M,2G,3,2G,4,6G,6,2G,etc。
+当region增长到9个时，9*9*128M/1024=10.125G >10G,至此以后region split大小都固定为10G。
+
+
+
+KeyPrefixRegionSplitPolicy:指定rowkey前缀位数划分region，通过读取table的prefix_split_key_policy.prefix_length属性，该属性为数字类型，表示前缀长度，
+在进行split时，按此长度对splitPoint进行截取。个人理解是rowkey前缀不相等，则划分region。此种策略比较适合固定前缀的rowkey。
+当table中没有设置prefix_split_key_policy.prefix_length属性，或prefix_split_key_policy.prefix_length属性不为Integer类型时，
+指定此策略效果等同与使用IncreasingToUpperBoundRegionSplitPolicy。

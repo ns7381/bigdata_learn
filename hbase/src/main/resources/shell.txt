@@ -1,0 +1,77 @@
+1. 进入shell
+hbase shell
+
+2. 常用
+help             #查看帮助
+help "list"      #查看list命令
+
+3. 表操作
+#创建表
+create 'member','member_id','address','info'
+#设定预分区
+create 'staff','info','partition1',SPLITS => ['1000','2000','3000','4000']
+#生成 16 进制序列预分区
+create 'staff2','info','partition2',{NUMREGIONS => 15, SPLITALGO => 'HexStringSplit'}
+#按照文件中设置的规则预分区
+#创建 splits.txt 文件内容如下：
+# aaaa
+# bbbb
+# cccc
+# dddd
+create 'staff3','partition3',SPLITS_FILE => 'splits.txt'
+#查看表描述
+describe 'member'
+#enable和disable来启用/禁用这个表,相应的可以通过is_enabled和is_disabled来检查表是否被禁用
+is_enabled 'member'
+is_disabled 'member'
+#检查表是否存在
+exists 'member'
+#清空表
+truncate 'member'
+#删除表
+disable 'member'
+drop 'member'
+#添加一个列族
+alter 'member', 'id'
+#删除一个列族
+alter 'member', {NAME => 'member_id', METHOD => 'delete'}
+
+4. 数据操作
+#插入数据
+put 'member', 'debugo','id','11'
+put 'member', 'debugo','info:age','27'
+put 'member', 'debugo','info:birthday','1987-04-04'
+put 'member', 'debugo','info:industry', 'it'
+put 'member', 'debugo','address:city','beijing'
+put 'member', 'debugo','address:country','china'
+put 'member', 'Sariel', 'id', '21'
+put 'member', 'Sariel','info:age', '26'
+put 'member', 'Sariel','info:birthday', '1988-05-09 '
+put 'member', 'Sariel','info:industry', 'it'
+put 'member', 'Sariel','address:city', 'beijing'
+put 'member', 'Sariel','address:country', 'china'
+put 'member', 'Elvis', 'id', '22'
+put 'member', 'Elvis','info:age', '26'
+put 'member', 'Elvis','info:birthday', '1988-09-14 '
+put 'member', 'Elvis','info:industry', 'it'
+put 'member', 'Elvis','address:city', 'beijing'
+put 'member', 'Elvis','address:country', 'china'
+#查询
+count 'member'                        #统计行数
+get 'member', 'Sariel'                #获取一个id的所有数据
+get 'member', 'Sariel', 'info'        #获得一个id，一个列簇（一个列）中的所有数据
+scan 'member'                         #查询整表数据
+scan 'member', {COLUMN=>'info'}       #扫描整个列簇
+scan 'member', {COLUMN=> 'info:birthday'}  #指定扫描其中的某个列
+#除了列（COLUMN）修饰词外，HBase还支持
+# Limit（限制查询结果行数），
+# STARTROW（ROWKEY起始行,会先根据这个key定位到region，再向后扫描）、
+# STOPROW(结束行)、
+# TIMERANGE（限定时间戳范围）、
+# VERSIONS（版本数）、
+# FILTER（按条件过滤行）等
+scan 'member', { STARTROW => 'Sariel', LIMIT=>1, VERSIONS=>1}
+scan 'member', FILTER=>"ValueFilter(=,'binary:26')"   #限制某个列的值等于26
+scan 'member', FILTER=>"ValueFilter(=,'substring:6')" #值包含6这个值
+scan 'member', FILTER=>"ColumnPrefixFilter('birth')"  #列名中的前缀为birth
+scan 'member', FILTER=>"ColumnPrefixFilter('birth') AND ValueFilter ValueFilter(=,'substring:1988')"
