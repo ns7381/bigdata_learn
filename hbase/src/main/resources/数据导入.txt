@@ -1,0 +1,19 @@
+JAVA原生态API的Put方法导入
+
+使用ImportTsv将csv文件导入到Hbase
+命令：
+create 'test','info'
+hbase org.apache.hadoop.hbase.mapreduce.ImportTsv -Dimporttsv.separator="," -Dimporttsv.columns=HBASE_ROW_KEY,info:name test /niu/word1.csv
+word1.csv内容如下
+1,”tom”
+2,”jerry”
+3,”john”
+
+利用bulkload方式导入到Hbase
+由于BulkLoad是绕过了Write to WAL，Write to MemStore及Flush to disk的过程，所以并不能通过WAL来进行一些复制数据的操作
+先通过ImportTsv生产HFile文件
+hbase org.apache.hadoop.hbase.mapreduce.ImportTsv -Dimporttsv.separator="," -Dimporttsv.bulk.output=/niu/hfile -Dimporttsv.columns=HBASE_ROW_KEY,info:name test /niu/word1.csv
+再通过completeBulkload导入HBase
+yarn jar /usr/hdp/2.4.2.0-258/hbase/lib/hbase-server.jar completebulkload /niu/hfile test
+
+利用Export和Import导入到HBase

@@ -1,7 +1,7 @@
 package com.gaurav.kafka.constants;
 
 public interface IKafkaConstants {
-	String KAFKA_BROKERS = "hdinsight-20190325094135-20-master-4:6667";
+	String KAFKA_BROKERS = "hdinsight-20190409175205-62-master-3.novalocal:6667";
 	
 	Integer MESSAGE_COUNT=1000;
 	

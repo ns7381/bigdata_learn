@@ -21,7 +21,8 @@ hbase.hregion.max.filesize 为hbase-site中设定的单个region大小，默认1
 
 
 
-KeyPrefixRegionSplitPolicy:指定rowkey前缀位数划分region，通过读取table的prefix_split_key_policy.prefix_length属性，该属性为数字类型，表示前缀长度，
+KeyPrefixRegionSplitPolicy:
+指定rowkey前缀位数划分region，通过读取table的prefix_split_key_policy.prefix_length属性，该属性为数字类型，表示前缀长度，
 在进行split时，按此长度对splitPoint进行截取。个人理解是rowkey前缀不相等，则划分region。此种策略比较适合固定前缀的rowkey。
 当table中没有设置prefix_split_key_policy.prefix_length属性，或prefix_split_key_policy.prefix_length属性不为Integer类型时，
 指定此策略效果等同与使用IncreasingToUpperBoundRegionSplitPolicy。

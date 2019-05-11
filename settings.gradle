@@ -7,4 +7,5 @@ include 'spark'
 include 'flink'
 include 'zookeeper'
 include 'kafka'
+include 'yarn'
 
