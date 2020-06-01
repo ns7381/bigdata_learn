@@ -8,4 +8,6 @@ include 'flink'
 include 'zookeeper'
 include 'kafka'
 include 'yarn'
+include 'kerberos:hbase12-kerberos'
+findProject(':kerberos:hbase12-kerberos')?.name = 'hbase12-kerberos'
 
