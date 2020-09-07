@@ -1,6 +1,5 @@
 package com.nathan.bigdata.jes;
 
-import org.apache.commons.lang3.StringUtils;
 import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +28,7 @@ public class LogController {
         BoolQueryBuilder qb = QueryBuilders.boolQuery();
         qb.must(QueryBuilders.matchAllQuery());
         qb.mustNot(QueryBuilders.matchPhraseQuery("kubernetes.container_name", "jsf-server"));
-        if (StringUtils.isNoneBlank(query)) {
+        if (null != query && "".equals(query)) {
             qb.must(QueryBuilders.matchPhraseQuery("log", query));
         }
 
