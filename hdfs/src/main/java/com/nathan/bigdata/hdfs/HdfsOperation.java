@@ -1,12 +1,11 @@
 package com.nathan.bigdata.hdfs;
 
-import org.apache.commons.io.IOUtils;
+import org.apache.hadoop.io.IOUtils;
 import org.apache.hadoop.conf.Configuration;
-import org.apache.hadoop.fs.FSDataInputStream;
-import org.apache.hadoop.fs.FSDataOutputStream;
-import org.apache.hadoop.fs.FileSystem;
-import org.apache.hadoop.fs.Path;
+import org.apache.hadoop.fs.*;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URI;
 
@@ -51,10 +50,29 @@ public class HdfsOperation {
     private static void readFile(String path) throws IOException {
         Path hdfsreadpath = new Path(path);
         FSDataInputStream inputStream = fileSystem.open(hdfsreadpath);
-        String out= IOUtils.toString(inputStream, "UTF-8");
+        String out= org.apache.commons.io.IOUtils.toString(inputStream, "UTF-8");
         System.out.println(out);
         inputStream.close();
         fileSystem.close();
+    }
+
+    private static void readBlock(String path) throws IOException {
+        Path hdfsreadpath = new Path(path);
+        final RemoteIterator<LocatedFileStatus> files = fileSystem.listFiles(hdfsreadpath, false);
+        final BlockLocation[] blockLocations = files.next().getBlockLocations();
+        for (BlockLocation blockLocation : blockLocations) {
+            System.out.println(blockLocation.getHosts());
+            System.out.println(blockLocation.getOffset());
+            System.out.println(blockLocation.getLength());
+            System.out.println(blockLocation.getTopologyPaths());
+            System.out.println(blockLocation.getNames());
+            System.out.println(blockLocation.getCachedHosts());
+        }
+        final FSDataInputStream in = fileSystem.open(hdfsreadpath);
+        in.seek(blockLocations[1].getOffset());
+        FileOutputStream out = new FileOutputStream(new File("g:/files/hadoop_block2.tar.gz"));
+
+        IOUtils.copyBytes(in, out, 4096, true);
     }
 
     public static void main(String[] args) throws IOException {
