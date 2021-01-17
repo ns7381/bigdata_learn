@@ -1,4 +1,4 @@
-package com.nathan.bigdata.yarn;
+package com.nathan.bigdata.yarn.myapp;
 
 import org.apache.hadoop.yarn.api.ApplicationConstants;
 import org.apache.hadoop.yarn.api.records.*;

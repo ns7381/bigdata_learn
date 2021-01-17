@@ -1,4 +1,4 @@
-package com.nathan.bigdata.yarn;
+package com.nathan.bigdata.yarn.myapp;
 
 public class Container {
     public static void main(String[] args) throws Exception {

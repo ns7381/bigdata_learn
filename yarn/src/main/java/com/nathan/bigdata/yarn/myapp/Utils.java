@@ -1,4 +1,4 @@
-package com.nathan.bigdata.yarn;
+package com.nathan.bigdata.yarn.myapp;
 
 import org.apache.hadoop.fs.FileContext;
 import org.apache.hadoop.fs.FileStatus;
