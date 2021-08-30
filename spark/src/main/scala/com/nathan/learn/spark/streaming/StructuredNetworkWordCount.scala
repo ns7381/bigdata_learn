@@ -16,7 +16,7 @@
  */
 
 // scalastyle:off println
-package streaming
+package com.nathan.learn.spark.streaming
 
 import org.apache.spark.sql.SparkSession
 

@@ -1,7 +1,7 @@
 ##### 执行sparkStreaming程序
 
 ```scala
-package streaming
+package com.nathan.learn.spark.streaming
 
 import java.util.UUID
 import org.apache.spark.sql.SparkSession

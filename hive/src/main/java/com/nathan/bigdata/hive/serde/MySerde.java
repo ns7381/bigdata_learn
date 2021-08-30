@@ -1,4 +1,4 @@
-package com.nathan.bigdata.hive;
+package com.nathan.bigdata.hive.serde;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.hadoop.conf.Configuration;
@@ -18,7 +18,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nullable;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
 
 // 继承自AbstractSerDe，主要实现他下面的initialize，serialize，deserialize
 public class MySerde extends AbstractSerDe {

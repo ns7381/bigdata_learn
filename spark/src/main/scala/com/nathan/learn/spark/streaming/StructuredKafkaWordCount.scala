@@ -1,4 +1,4 @@
-package streaming
+package com.nathan.learn.spark.streaming
 
 import java.util.UUID
 
